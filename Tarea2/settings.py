@@ -29,7 +29,9 @@ SECRET_KEY = 'jkf5*#&=3l7x8-&&ho87gfl)bxg13aqob0tb+nwthz$n%vw5oq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'barria-t02.herokuapp.com',
+    ]
 
 
 # Application definition
