@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
 
-URL = "http://127.0.0.1:8000/"
+URL = "https://barria-t02.herokuapp.com/"
 URL_LOCAL = "http://127.0.0.1:8000/"
 URL_HOST = "https://barria-t02.herokuapp.com/"
 
