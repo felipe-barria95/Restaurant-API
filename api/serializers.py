@@ -10,7 +10,7 @@ class HamburguesaSerializer(serializers.HyperlinkedModelSerializer):
 class Hamburguesa_IngredienteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Hamburguesa_Ingrediente
-        fields = ('id_hamburguesa', 'id_ingrediente')
+        fields = ('id', 'id_hamburguesa', 'id_ingrediente')
 
 class IngredienteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

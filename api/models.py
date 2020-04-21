@@ -12,12 +12,13 @@ class Hamburguesa(models.Model):
         return self.nombre
 
 class Hamburguesa_Ingrediente(models.Model):
+    id = models.DecimalField(max_digits=5, decimal_places=0, primary_key=True)
     id_hamburguesa = models.DecimalField(max_digits=5, decimal_places=0)
     id_ingrediente = models.DecimalField(max_digits=5, decimal_places=0)
 
 
     def __str__(self):
-        return self.nombre
+        return self.id
 
 
 class Ingrediente(models.Model):
