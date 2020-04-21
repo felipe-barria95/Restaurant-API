@@ -1,8 +1,6 @@
 from django.db import models
 
 
-
-
 class Hamburguesa(models.Model):
     id = models.DecimalField(max_digits=5, decimal_places=0, primary_key=True)
     nombre = models.CharField(max_length=200)
@@ -17,6 +15,11 @@ class Hamburguesa_Ingrediente(models.Model):
     id_hamburguesa = models.DecimalField(max_digits=5, decimal_places=0)
     id_ingrediente = models.DecimalField(max_digits=5, decimal_places=0)
 
+
+    def __str__(self):
+        return self.nombre
+
+
 class Ingrediente(models.Model):
     id = models.DecimalField(max_digits=5, decimal_places=0, primary_key=True)
     nombre = models.CharField(max_length=200)
@@ -24,7 +27,3 @@ class Ingrediente(models.Model):
 
     def __str__(self):
         return self.nombre
-
-
-
-# Create your models here.

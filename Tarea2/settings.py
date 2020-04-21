@@ -31,6 +31,7 @@ SECRET_KEY = 'jkf5*#&=3l7x8-&&ho87gfl)bxg13aqob0tb+nwthz$n%vw5oq'
 DEBUG = True
 ALLOWED_HOSTS = [
     'barria-t02.herokuapp.com',
+    '127.0.0.1',
     ]
 
 
