@@ -57,9 +57,13 @@ class HamburguesaDetail(APIView):
         hamburguesa.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class Hamburguesa_IngredienteList(generics.ListCreateAPIView):
-    queryset = Hamburguesa_Ingrediente.objects.all()
-    serializer_class = Hamburguesa_IngredienteSerializer
+class Hamburguesa_IngredienteList(APIView):
+
+    def get(self, request, format=None):
+        hamburguesas = Hamburguesa_Ingrediente.objects.all()
+        serializer = Hamburguesa_IngredienteSerializer(hamburguesas, many=True)
+        return Response(serializer.data)
+
 
 class Hamburguesa_IngredienteDetail(APIView):
 
@@ -76,9 +80,26 @@ class Hamburguesa_IngredienteDetail(APIView):
         return Response(serializer.data)
 
     def put(self, request, p_1, p_2, format=None):
+        p_1 = int(p_1)
+        p_2 = int(p_2)
         dict_hamburguesa = {"id_hamburguesa": p_1, "id_ingrediente": p_2}
         serializer = Hamburguesa_IngredienteSerializer(data=dict_hamburguesa)
+        lista_hamburguesas = Hamburguesa_Ingrediente.objects.all()
+        serializer2 = Hamburguesa_IngredienteSerializer(lista_hamburguesas, many=True)
+        lista = serializer2.data
+        lista_ingredientes =  Ingrediente.objects.all()
+        serializer3 = IngredienteSerializer(lista_ingredientes, many=True)
+        lista_ingredientes = serializer3.data
         if serializer.is_valid():
+            i = 0
+            for ingrediente in lista_ingredientes:
+                if int(ingrediente['id']) == p_2:
+                    i+=1
+            if i == 0:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            for elemento in lista:
+                if int(elemento['id_hamburguesa']) == p_1 and int(elemento['id_ingrediente']) == p_2:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -88,6 +109,11 @@ class Hamburguesa_IngredienteDetail(APIView):
         hamburguesa.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+
+class Hamburguesa_IngredienteList(generics.ListCreateAPIView):
+    queryset = Hamburguesa_Ingrediente.objects.all()
+    serializer_class = Hamburguesa_IngredienteSerializer
 
 class IngredienteList(generics.ListCreateAPIView):
     queryset = Ingrediente.objects.all()
