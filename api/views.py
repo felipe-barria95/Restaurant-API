@@ -45,18 +45,12 @@ class HamburguesaDetail(APIView):
 
     def get(self, request, pk, format=None):
         hamburguesa = self.get_object(pk)
+        print(hamburguesa)
         serializer = HamburguesaSerializer(hamburguesa)
         dict_hamburguesa = serializer.data
         dict_hamburguesa["ingredientes"] = retornar_ingredientes(dict_hamburguesa['id'])
         return Response(dict_hamburguesa)
 
-    def put(self, request, pk, format=None):
-        hamburguesa = self.get_object(pk)
-        serializer = HamburguesaSerializer(hamburguesa, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
         hamburguesa = self.get_object(pk)
@@ -80,6 +74,14 @@ class Hamburguesa_IngredienteDetail(APIView):
         serializer = Hamburguesa_IngredienteSerializer(hamburguesa_ingrediente)
         dict_hamburguesa = serializer.data
         return Response(serializer.data)
+
+    def put(self, request, p_1, p_2, format=None):
+        dict_hamburguesa = {"id_hamburguesa": p_1, "id_ingrediente": p_2}
+        serializer = Hamburguesa_IngredienteSerializer(data=dict_hamburguesa)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
         hamburguesa = self.get_object(pk)
@@ -110,12 +112,12 @@ class IngredienteDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-def retornar_ingredientes(id):
+def retornar_ingredientes(list_id):
     lista = []
     hamburguesas_e_ingredientes = Hamburguesa_Ingrediente.objects.all()
     serializer = Hamburguesa_IngredienteSerializer(hamburguesas_e_ingredientes, many=True)
     for elemento in serializer.data:
-        if elemento['id_hamburguesa'] == id:
+        if int(elemento['id_hamburguesa']) == int(list_id):
             dict = {"path" : URL + "ingrediente/{}".format(elemento['id_ingrediente'])}
             lista.append(dict)
     return lista

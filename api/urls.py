@@ -10,7 +10,7 @@ urlpatterns = [
     path('ingrediente/<int:pk>/', views.IngredienteDetail.as_view()),
     path('hamburguesa_ingrediente/', views.Hamburguesa_IngredienteList.as_view()),
     path('hamburguesa_ingrediente/<int:pk>/', views.Hamburguesa_IngredienteDetail.as_view()),
-    path('hamburguesa/<int:p_1>/ingrediente/<int:p_2>/', views.Hamburguesa_IngredienteList.as_view()),
+    path('hamburguesa/<int:p_1>/ingrediente/<int:p_2>/', views.Hamburguesa_IngredienteDetail.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
