@@ -152,7 +152,6 @@ class IngredienteDetail(APIView):
         lista_hamburguesas_ingredientes = Hamburguesa_Ingrediente.objects.all()
         serializer2 = Hamburguesa_IngredienteSerializer(lista_hamburguesas_ingredientes, many=True)
         lista = serializer2.data
-        print('hola')
         for elemento in lista:
             if elemento['id_ingrediente'] == pk:
                 return Response(status=status.HTTP_400_BAD_REQUEST)

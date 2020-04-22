@@ -15,3 +15,6 @@ urlpatterns = [
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
+
+
+####SLASH APPEND X VER
