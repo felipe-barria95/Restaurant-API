@@ -4,6 +4,7 @@ from django.http import HttpResponse, Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
+import json
 
 URL = "https://barria-t02.herokuapp.com/"
 URL_LOCAL = "http://127.0.0.1:8000/"
@@ -64,8 +65,30 @@ class HamburguesaDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def patch(self, request, pk, format=None):
+        serializer = json.loads(request.body)
         hamburguesa = self.get_object(pk)
-        print(hamburguesa)
+        for elemento in serializer:
+            if elemento == "nombre":
+                hamburguesa.nombre = serializer['nombre']
+                hamburguesa.save()
+            elif elemento == "descripcion":
+                hamburguesa.descripcion = serializer['descripcion']
+                hamburguesa.save()
+            elif elemento == "imagen":
+                hamburguesa.imagen = serializer['imagen']
+                hamburguesa.save()
+            elif elemento == "precio":
+                hamburguesa.precio = serializer['precio']
+                hamburguesa.save()
+                return Response(status=status.HTTP_201_CREATED)
+            elif elemento == "id":
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            elif elemento == "ingredientes":
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(status=status.HTTP_201_CREATED)
 
 class Hamburguesa_IngredienteList(APIView):
 
