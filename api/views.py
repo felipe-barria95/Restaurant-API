@@ -12,7 +12,6 @@ URL_HOST = "https://barria-t02.herokuapp.com/"
 
 
 def index(request):
-    print("hola")
     return HttpResponse("Tarea 2 de Taller de Integración. By: Felipe Barría M.")
 # Create your views here.
 
@@ -45,7 +44,6 @@ class HamburguesaDetail(APIView):
 
     def get(self, request, pk, format=None):
         hamburguesa = self.get_object(pk)
-        print(hamburguesa)
         serializer = HamburguesaSerializer(hamburguesa)
         dict_hamburguesa = serializer.data
         dict_hamburguesa["ingredientes"] = retornar_ingredientes(dict_hamburguesa['id'])
@@ -55,7 +53,19 @@ class HamburguesaDetail(APIView):
     def delete(self, request, pk, format=None):
         hamburguesa = self.get_object(pk)
         hamburguesa.delete()
+        lista_hamburguesas_ingredientes = Hamburguesa_Ingrediente.objects.all()
+        serializer2 = Hamburguesa_IngredienteSerializer(lista_hamburguesas_ingredientes, many=True)
+        lista = serializer2.data
+        for elemento in lista:
+            if elemento['id_hamburguesa'] == pk:
+                pk_2 = int(elemento['id'])
+                hamburguesa_ingrediente = Hamburguesa_Ingrediente.objects.get(pk_2)
+                hamburguesa_ingrediente.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def patch(self, request, pk, format=None):
+        hamburguesa = self.get_object(pk)
+        print(hamburguesa)
 
 class Hamburguesa_IngredienteList(APIView):
 
@@ -123,8 +133,6 @@ class Hamburguesa_IngredienteDetail(APIView):
                 hamburguesa_ingrediente.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
 
 
 class Hamburguesa_IngredienteList(generics.ListCreateAPIView):
