@@ -8,7 +8,7 @@ Los datos utilizados en la base de datos fueron extraidos de la página de Uncle
   - nombre
   - precio
   - descripcion
-  - imagen
+  - imagen \n
   Se puede actualizar mas de una propiedad a la vez. Si se intenta actualizar los ingredientes o ID con PATCH, retornara HTTP404 response.
 - **DELETE** /hamburguesa/id_ham/ingrediente/id_ing , elimina el ingrediente entregado de la hamburguesa. Se deberan entregar ID's validos, sino retornara HTTP404 response.
 - **PUT** /hamburguesa/id_ham/ingrediente/id_ing , agrega el ingrediente entregado a la hamburguesa. Debe cumplir con lo anterior. Además, no se podra agregar un ingrediente a una hamburguesa que ya tenga ese mismo ingrediente.
