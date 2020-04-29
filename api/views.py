@@ -44,6 +44,10 @@ class HamburguesaDetail(APIView):
             raise Http404
 
     def get(self, request, pk, format=None):
+        try:
+            pk = int(pk)
+        except ValueError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         hamburguesa = self.get_object(pk)
         serializer = HamburguesaSerializer(hamburguesa)
         dict_hamburguesa = serializer.data
@@ -52,6 +56,10 @@ class HamburguesaDetail(APIView):
 
 
     def delete(self, request, pk, format=None):
+        try:
+            pk = int(pk)
+        except ValueError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         hamburguesa = self.get_object(pk)
         hamburguesa.delete()
         lista_hamburguesas_ingredientes = Hamburguesa_Ingrediente.objects.all()
@@ -62,33 +70,47 @@ class HamburguesaDetail(APIView):
                 pk_2 = int(elemento['id'])
                 hamburguesa_ingrediente = Hamburguesa_Ingrediente.objects.get(pk_2)
                 hamburguesa_ingrediente.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_200_OK)
 
     def patch(self, request, pk, format=None):
+        try:
+            pk = int(pk)
+        except ValueError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         serializer = json.loads(request.body)
         hamburguesa = self.get_object(pk)
         for elemento in serializer:
             if elemento == "nombre":
-                hamburguesa.nombre = serializer['nombre']
-                hamburguesa.save()
+                if type(serializer['nombre']) == str:
+                    hamburguesa.nombre = serializer['nombre']
+                    hamburguesa.save()
+                else:
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
             elif elemento == "descripcion":
-                hamburguesa.descripcion = serializer['descripcion']
-                hamburguesa.save()
+                if type(serializer['descripcion']) == str:
+                    hamburguesa.descripcion = serializer['descripcion']
+                    hamburguesa.save()
+                else:
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
             elif elemento == "imagen":
-                hamburguesa.imagen = serializer['imagen']
-                hamburguesa.save()
+                if type(serializer['imagen']) == str:
+                    hamburguesa.imagen = serializer['imagen']
+                    hamburguesa.save()
+                else:
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
             elif elemento == "precio":
-                hamburguesa.precio = serializer['precio']
-                hamburguesa.save()
-                return Response(status=status.HTTP_201_CREATED)
+                if type(serializer['precio']) == int:
+                    hamburguesa.precio = serializer['precio']
+                    hamburguesa.save()
+                else:
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
             elif elemento == "id":
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             elif elemento == "ingredientes":
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_200_OK)
 
 class Hamburguesa_IngredienteList(APIView):
 
@@ -107,12 +129,21 @@ class Hamburguesa_IngredienteDetail(APIView):
             raise Http404
 
     def get(self, request, pk, format=None):
+        try:
+            pk = int(pk)
+        except ValueError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         hamburguesa_ingrediente = self.get_object(pk)
         serializer = Hamburguesa_IngredienteSerializer(hamburguesa_ingrediente)
         dict_hamburguesa = serializer.data
         return Response(serializer.data)
 
     def put(self, request, p_1, p_2, format=None):
+        try:
+            p_1 = int(p_1)
+            p_2 = int(p_2)
+        except ValueError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         dict_hamburguesa = {"id_hamburguesa": p_1, "id_ingrediente": p_2}
         serializer = Hamburguesa_IngredienteSerializer(data=dict_hamburguesa)
 
@@ -137,7 +168,7 @@ class Hamburguesa_IngredienteDetail(APIView):
                 if int(hamburguesa['id']) == p_1:
                     j+=1
             if i == 0 or j == 0:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
             for elemento in lista:
                 if elemento['id_hamburguesa'] == p_1 and elemento['id_ingrediente'] == p_2:
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -146,6 +177,11 @@ class Hamburguesa_IngredienteDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, p_1, p_2, format=None):
+        try:
+            p_1 = int(p_1)
+            p_2 = int(p_2)
+        except ValueError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         lista_hamburguesas_ingredientes = Hamburguesa_Ingrediente.objects.all()
         serializer2 = Hamburguesa_IngredienteSerializer(lista_hamburguesas_ingredientes, many=True)
         lista = serializer2.data
@@ -154,7 +190,7 @@ class Hamburguesa_IngredienteDetail(APIView):
                 pk = elemento['id']
                 hamburguesa_ingrediente = self.get_object(pk)
                 hamburguesa_ingrediente.delete()
-                return Response(status=status.HTTP_204_NO_CONTENT)
+                return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -175,11 +211,19 @@ class IngredienteDetail(APIView):
             raise Http404
 
     def get(self, request, pk, format=None):
+        try:
+            pk = int(pk)
+        except ValueError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         ingrediente = self.get_object(pk)
         serializer = IngredienteSerializer(ingrediente)
         return Response(serializer.data)
 
     def delete(self, request, pk, format=None):
+        try:
+            pk = int(pk)
+        except ValueError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         lista_hamburguesas_ingredientes = Hamburguesa_Ingrediente.objects.all()
         serializer2 = Hamburguesa_IngredienteSerializer(lista_hamburguesas_ingredientes, many=True)
         lista = serializer2.data
@@ -188,7 +232,7 @@ class IngredienteDetail(APIView):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         ingrediente = self.get_object(pk)
         ingrediente.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_200_OK)
 
 
 def retornar_ingredientes(list_id):
