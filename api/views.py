@@ -60,8 +60,6 @@ class HamburguesaDetail(APIView):
             pk = int(pk)
         except ValueError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        hamburguesa = self.get_object(pk)
-        hamburguesa.delete()
         lista_hamburguesas_ingredientes = Hamburguesa_Ingrediente.objects.all()
         serializer2 = Hamburguesa_IngredienteSerializer(lista_hamburguesas_ingredientes, many=True)
         lista = serializer2.data
@@ -70,6 +68,8 @@ class HamburguesaDetail(APIView):
                 pk_2 = int(elemento['id'])
                 hamburguesa_ingrediente = Hamburguesa_Ingrediente.objects.get(pk_2)
                 hamburguesa_ingrediente.delete()
+        hamburguesa = self.get_object(pk)
+        hamburguesa.delete()
         return Response(status=status.HTTP_200_OK)
 
     def patch(self, request, pk, format=None):
