@@ -65,8 +65,9 @@ class HamburguesaDetail(APIView):
         lista = serializer2.data
         for elemento in lista:
             if elemento['id_hamburguesa'] == pk:
-                pk_2 = int(elemento['id'])
-                hamburguesa_ingrediente = Hamburguesa_Ingrediente.objects.get(pk_2)
+                pk_2 = elemento['id']
+                print(pk_2)
+                hamburguesa_ingrediente = Hamburguesa_Ingrediente.objects.get(id=pk_2)
                 hamburguesa_ingrediente.delete()
         hamburguesa = self.get_object(pk)
         hamburguesa.delete()
