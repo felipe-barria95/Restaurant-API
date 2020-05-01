@@ -12,7 +12,7 @@ Los datos utilizados en la base de datos fueron extraidos de la página de Uncle
 
 Nota: Se puede actualizar mas de una propiedad a la vez. Si se intenta actualizar los ingredientes o el ID con PATCH, retornara HTTP400 response. Si no se encuentra el ID de la hamburguesa retornara HTTP404. Si se ingresa un ID no valido retornara HTTP400.
 - **DELETE** /hamburguesa/id_ham/ingrediente/id_ing , elimina el ingrediente entregado de la hamburguesa. Se deberan entregar ID's validos y que la hamburguesa como el ingrediente efectivamente esten instanciados, sino retornara HTTP404 response.
-- **PUT** /hamburguesa/id_ham/ingrediente/id_ing , agrega el ingrediente entregado a la hamburguesa. Debe cumplir con lo anterior. Además, no se podra agregar un ingrediente a una hamburguesa que ya tenga ese mismo ingrediente. Si se hacer retornara HTTP400.
+- **PUT** /hamburguesa/id_ham/ingrediente/id_ing , agrega el ingrediente entregado a la hamburguesa. Debe cumplir con lo anterior. Además, no se podra agregar un ingrediente a una hamburguesa que ya tenga ese mismo ingrediente, o sino retornara HTTP400.
 - **GET** /ingrediente , obtiene todos los ingredientes que existen.
 - **POST** /ingrediente , crea un nuevo ingrediente. De la misma forma que la hamburguesa, no sera necesario explicitar un ID para el ingrediente creado.
 - **GET** /ingrediente/id , obtiene el ingrediente con el ID entregado.
