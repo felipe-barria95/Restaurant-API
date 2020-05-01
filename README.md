@@ -16,4 +16,4 @@ Nota: Se puede actualizar mas de una propiedad a la vez. Si se intenta actualiza
 - **GET** /ingrediente , obtiene todos los ingredientes que existen.
 - **POST** /ingrediente , crea un nuevo ingrediente. De la misma forma que la hamburguesa, no sera necesario explicitar un ID para el ingrediente creado.
 - **GET** /ingrediente/id , obtiene el ingrediente con el ID entregado.
-- **DELETE** /ingrediente/id , borra un ingrediente con el ID entregado, solo si no esta en ninguna hamburguesa.
+- **DELETE** /ingrediente/id , borra un ingrediente con el ID entregado, solo si no esta en ninguna hamburguesa. Si el ingrediente esta presente en una hamburguesa retornara HTTP409

@@ -229,7 +229,7 @@ class IngredienteDetail(APIView):
         lista = serializer2.data
         for elemento in lista:
             if elemento['id_ingrediente'] == pk:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response(status=status.HTTP_409_CONFLICT)
         ingrediente = self.get_object(pk)
         ingrediente.delete()
         return Response(status=status.HTTP_200_OK)
