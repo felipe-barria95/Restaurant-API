@@ -191,7 +191,7 @@ class Hamburguesa_IngredienteDetail(APIView):
                 hamburguesa_ingrediente = self.get_object(pk)
                 hamburguesa_ingrediente.delete()
                 return Response(status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class Hamburguesa_IngredienteList(generics.ListCreateAPIView):
