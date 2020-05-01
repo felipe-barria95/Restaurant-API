@@ -13,7 +13,7 @@ URL_HOST = "https://barria-t02.herokuapp.com/"
 
 
 def index(request):
-    return HttpResponse("Tarea 2 de Taller de Integración. By: Felipe Barría M.")
+    return HttpResponse("Tarea 2 de Taller de Integración. By: Felipe Barría M. Mas informacion en: https://github.com/felipe-barria95/T02_Taller")
 # Create your views here.
 
 
