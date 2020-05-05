@@ -177,7 +177,7 @@ class Hamburguesa_IngredienteDetail(APIView):
                 return Response(status=status.HTTP_404_NOT_FOUND)
             for elemento in lista:
                 if elemento['id_hamburguesa'] == p_1 and elemento['id_ingrediente'] == p_2:
-                    return Response(status=status.HTTP_400_BAD_REQUEST)
+                    return Response(status=status.HTTP_200_OK) ##aca es
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
