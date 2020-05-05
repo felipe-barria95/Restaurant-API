@@ -112,7 +112,11 @@ class HamburguesaDetail(APIView):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_200_OK)
+        hamburguesa = self.get_object(pk)
+        serializer = HamburguesaSerializer(hamburguesa)
+        dict_hamburguesa = serializer.data
+        dict_hamburguesa["ingredientes"] = retornar_ingredientes(dict_hamburguesa['id'])
+        return Response(dict_hamburguesa, status=status.HTTP_200_OK)
 
 class Hamburguesa_IngredienteList(APIView):
 
@@ -170,13 +174,13 @@ class Hamburguesa_IngredienteDetail(APIView):
                 if int(hamburguesa['id']) == p_1:
                     j+=1
             if i == 0 or j == 0:
-                return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+                return Response(status=status.HTTP_404_NOT_FOUND)
             for elemento in lista:
                 if elemento['id_hamburguesa'] == p_1 and elemento['id_ingrediente'] == p_2:
-                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, p_1, p_2, format=None):
         try:
