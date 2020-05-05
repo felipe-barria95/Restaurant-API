@@ -35,7 +35,7 @@ class HamburguesaList(APIView):
             dict_hamburguesa = serializer.data
             dict_hamburguesa['ingredientes'] = []
             return Response(dict_hamburguesa, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class HamburguesaDetail(APIView):
 
