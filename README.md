@@ -1,19 +1,19 @@
-# Tarea 2 Taller de Integración - API REST
-Los datos utilizados en la base de datos fueron extraidos de la página de Uncle Fletch. A continuación, se detallarán los metodos que se pueden utilizar, en conjunto con las restricciones correspondientes para cada caso.
-- **GET** /hamburguesa , Obtiene las 11 hamburguesas con la informacion de cada una.
-- **POST** /hamburguesa , se crea la hamburguesa con la información entregada. No es necesario agregarle un atributo ID, ya que la base de datos la va a instansiar de forma automática. Si se instancia de forma correcta retornara HTTP201. De lo contrario retornara HTTP400. Debe incluir nombre, precio, descripcion e imagen. Ingredientes no debe ser referenciado.
-- **GET** /hamburguesa/id , obtiene la hamburguesa con el ID especificado. Si se ingresa un ID invalido retornara HTTP400. Si no se encuentra una hamburguesa con el ID indicado retornara HTTP404. Si se ingresa un ID valido retornara HTTP200 con el json correspondiente.
-- **DELETE** /hamburguesa/id , elimina la hamburguesa con el ID especificado con toda la informacion en su interior. Esto incluye las instanciaciones con los ingredientes. Si se ingresa un ID invalido retornara HTTP400. Si no se encuentra una hamburguesa con el ID indicado retornara HTTP404.
-- **PATCH** /hamburguesa/id , actualiza la una de las siguientes propiedades:
-  - nombre
-  - precio
-  - descripcion
-  - imagen
+# T02 - API REST
+The data used in the database was taken from the [Uncle Fletch](https://delivery.uncle-fletch.com) website. Next, the methods that can be used will be detailed, together with the corresponding restrictions for each case.
+- **GET** /hamburguesa - Get the 11 hamburgers with the information of each one.
+- **POST** /hamburguesa - The hamburger is created with the information provided. It is not necessary to add an ID attribute to it, since the database will instantiate it automatically. If it is instantiated correctly, it will return HTTP201. Otherwise it will return HTTP400. It must include name, price, description and image. Ingredients should not be referenced.
+- **GET** /hamburguesa/{id} - Gets the hamburger with the specified ID. If an invalid ID is entered, HTTP400 will be returned. If a hamburger with the indicated ID is not found, it will return HTTP404. If a valid ID is entered, it will return HTTP200 with the corresponding JSON.
+- **DELETE** /hamburguesa/{id} - Delete the hamburger with the specified ID with all the information inside. This includes instantiations with ingredients. If an invalid ID is entered, HTTP400 will be returned. If a hamburger with the indicated ID is not found, it will return HTTP404.
+- **PATCH** /hamburguesa/{id} , updates one of the following properties:
+  - name
+  - price
+  - description
+  - image
 
-Nota: Se puede actualizar mas de una propiedad a la vez. Si se intenta actualizar los ingredientes o el ID con PATCH, retornara HTTP400 response. Si no se encuentra el ID de la hamburguesa retornara HTTP404. Si se ingresa un ID no valido retornara HTTP400.
-- **DELETE** /hamburguesa/id_ham/ingrediente/id_ing , elimina el ingrediente entregado de la hamburguesa. Se deberan entregar ID's validos y que la hamburguesa como el ingrediente efectivamente esten instanciados, sino retornara HTTP404 response.
-- **PUT** /hamburguesa/id_ham/ingrediente/id_ing , agrega el ingrediente entregado a la hamburguesa. Debe cumplir con lo anterior. Además, no se podra agregar un ingrediente a una hamburguesa que ya tenga ese mismo ingrediente, o sino retornara HTTP400.
-- **GET** /ingrediente , obtiene todos los ingredientes que existen.
-- **POST** /ingrediente , crea un nuevo ingrediente. De la misma forma que la hamburguesa, no sera necesario explicitar un ID para el ingrediente creado.
-- **GET** /ingrediente/id , obtiene el ingrediente con el ID entregado.
-- **DELETE** /ingrediente/id , borra un ingrediente con el ID entregado, solo si no esta en ninguna hamburguesa. Si el ingrediente esta presente en una hamburguesa retornara HTTP409.
+Side note: You can update more than one property at the same time. If you try to update the ingredients or the ID with PATCH, it will return HTTP400 response. If the hamburger ID is not found, it will return HTTP404. If an invalid ID is entered, HTTP400 will be returned.
+- **DELETE** /hamburguesa/{id_ham}/ingrediente/{id_ing} - Removes the delivered ingredient from the burger. Valid ID's must be provided and that the hamburger as the ingredient is effectively instantiated, otherwise it will return HTTP404 response.
+- **PUT** /hamburguesa/{id_ham}/ingrediente/{id_ing} - add the delivered ingredient to the burger. You must comply with the above. Also, you cannot add an ingredient to a hamburger that already has that same ingredient, or it will return HTTP400.
+- **GET** /ingrediente - Get all the ingredients that exist.
+- **POST** /ingrediente - Create a new ingredient. In the same way as the hamburger, it will not be necessary to specify an ID for the ingredient created.
+- **GET** /ingrediente/{id} - Get the ingredient with the given ID.
+- **DELETE** /ingrediente/{id} - Delete an ingredient with the given ID, only if it is not in any hamburger. If the ingredient is present in a hamburger it will return HTTP409.
