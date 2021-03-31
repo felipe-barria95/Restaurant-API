@@ -1,5 +1,5 @@
 # T02 - API REST
-The data used in the database was taken from the [Uncle Fletch](https://delivery.uncle-fletch.com) website. Next, the methods that can be used will be detailed, together with the corresponding restrictions for each case.
+The data used in the database was taken from the [Uncle Fletch](https://delivery.uncle-fletch.com) website. Next, the methods that can be used will be detailed, together with the corresponding restrictions for each case. Link to website: [Restaurant API](https://barria-t02.herokuapp.com)
 - **GET** /hamburguesa - Get the 11 hamburgers with the information of each one.
 - **POST** /hamburguesa - The hamburger is created with the information provided. It is not necessary to add an ID attribute to it, since the database will instantiate it automatically. If it is instantiated correctly, it will return HTTP201. Otherwise it will return HTTP400 error. It must include name, price, description and image. Ingredients should not be referenced.
 - **GET** /hamburguesa/{id} - Gets the hamburger with the specified ID. If an invalid ID is entered, HTTP400 error will be returned. If a hamburger with the indicated ID is not found, it will raise HTTP404 error. If a valid ID is entered, it will return HTTP200 with the corresponding JSON.
