@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Hamburguesa, Hamburguesa_Ingrediente, Ingrediente
+from .models import Hamburger, Hamburger_Ingredient, Ingredient
 
-admin.site.register(Hamburguesa)
-admin.site.register(Hamburguesa_Ingrediente)
-admin.site.register(Ingrediente)
+admin.site.register(Hamburger)
+admin.site.register(Hamburger_Ingredient)
+admin.site.register(Ingredient)

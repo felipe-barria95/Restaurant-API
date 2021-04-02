@@ -1,5 +1,5 @@
-from .serializers import HamburguesaSerializer, Hamburguesa_IngredienteSerializer, IngredienteSerializer
-from .models import Hamburguesa, Hamburguesa_Ingrediente, Ingrediente
+from .serializers import HamburgerSerializer, Hamburger_IngredientSerializer, IngredientSerializer
+from .models import Hamburger, Hamburger_Ingredient, Ingredient
 from django.http import HttpResponse, Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -17,32 +17,32 @@ def index(request):
 # Create your views here.
 
 
-class HamburguesaList(APIView):
+class HamburgerList(APIView):
 
     def get(self, request, format=None):
-        hamburguesas = Hamburguesa.objects.all()
-        serializer = HamburguesaSerializer(hamburguesas, many=True)
-        lista_final = []
-        for elemento in serializer.data:
-            elemento["ingredientes"] = retornar_ingredientes(elemento['id'])
-            lista_final.append(elemento)
-        return Response(lista_final)
+        hamburgers = Hamburger.objects.all()
+        serializer = HamburgerSerializer(hamburgers, many=True)
+        final_list = []
+        for element in serializer.data:
+            element["ingredient"] = return_ingredients(element['id'])
+            final_list.append(element)
+        return Response(final_list)
 
     def post(self, request, format=None):
-        serializer = HamburguesaSerializer(data=request.data)
+        serializer = HamburgerSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            dict_hamburguesa = serializer.data
-            dict_hamburguesa['ingredientes'] = []
-            return Response(dict_hamburguesa, status=status.HTTP_201_CREATED)
+            hamburger_dict = serializer.data
+            hamburger_dict['ingredients'] = []
+            return Response(hamburger_dict, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-class HamburguesaDetail(APIView):
+class HamburgerDetail(APIView):
 
     def get_object(self, pk):
         try:
-            return Hamburguesa.objects.get(pk=pk)
-        except Hamburguesa.DoesNotExist:
+            return Hamburger.objects.get(pk=pk)
+        except Hamburger.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
@@ -50,11 +50,11 @@ class HamburguesaDetail(APIView):
             pk = int(pk)
         except ValueError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        hamburguesa = self.get_object(pk)
-        serializer = HamburguesaSerializer(hamburguesa)
-        dict_hamburguesa = serializer.data
-        dict_hamburguesa["ingredientes"] = retornar_ingredientes(dict_hamburguesa['id'])
-        return Response(dict_hamburguesa)
+        hamburger = self.get_object(pk)
+        serializer = HamburgerSerializer(hamburger)
+        hamburger_dict = serializer.data
+        hamburger_dict["ingredients"] = return_ingredients(hamburger_dict['id'])
+        return Response(hamburger_dict)
 
 
     def delete(self, request, pk, format=None):
@@ -62,16 +62,16 @@ class HamburguesaDetail(APIView):
             pk = int(pk)
         except ValueError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        lista_hamburguesas_ingredientes = Hamburguesa_Ingrediente.objects.all()
-        serializer2 = Hamburguesa_IngredienteSerializer(lista_hamburguesas_ingredientes, many=True)
-        lista = serializer2.data
-        for elemento in lista:
-            if elemento['id_hamburguesa'] == pk:
-                pk_2 = int(elemento['id'])
-                hamburguesa_ingrediente = Hamburguesa_Ingrediente.objects.get(id=pk_2)
-                hamburguesa_ingrediente.delete()
-        hamburguesa = self.get_object(pk)
-        hamburguesa.delete()
+        hamburger_ingredient_list = Hamburger_Ingredient.objects.all()
+        serializer = Hamburger_IngredientSerializer(hamburger_ingredient_list, many=True)
+        list = serializer.data
+        for element in list:
+            if element['id_hamburger'] == pk:
+                pk_2 = int(element['id'])
+                hamburger_ingredient = Hamburger_Ingredient.objects.get(id=pk_2)
+                hamburger_ingredient.delete()
+        hamburger = self.get_object(pk)
+        hamburger.delete()
         return Response(status=status.HTTP_200_OK)
 
     def patch(self, request, pk, format=None):
@@ -80,58 +80,54 @@ class HamburguesaDetail(APIView):
         except ValueError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         serializer = json.loads(request.body)
-        hamburguesa = self.get_object(pk)
-        for elemento in serializer:
-            if elemento == "nombre":
-                if type(serializer['nombre']) == str:
-                    hamburguesa.nombre = serializer['nombre']
-                    hamburguesa.save()
+        hamburger = self.get_object(pk)
+        for element in serializer:
+            if element == "name":
+                if type(serializer['name']) == str:
+                    hamburger.name = serializer['name']
+                    hamburger.save()
                 else:
                     return Response(status=status.HTTP_400_BAD_REQUEST)
-            elif elemento == "descripcion":
-                if type(serializer['descripcion']) == str:
-                    hamburguesa.descripcion = serializer['descripcion']
-                    hamburguesa.save()
+            elif element == "description":
+                if type(serializer['description']) == str:
+                    hamburger.descritcion = serializer['description']
+                    hamburger.save()
                 else:
                     return Response(status=status.HTTP_400_BAD_REQUEST)
-            elif elemento == "imagen":
-                if type(serializer['imagen']) == str:
-                    hamburguesa.imagen = serializer['imagen']
-                    hamburguesa.save()
+            elif elemento == "image":
+                if type(serializer['image']) == str:
+                    hamburger.image = serializer['image']
+                    hamburger.save()
                 else:
                     return Response(status=status.HTTP_400_BAD_REQUEST)
-            elif elemento == "precio":
-                if type(serializer['precio']) == int:
-                    hamburguesa.precio = serializer['precio']
-                    hamburguesa.save()
+            elif elemento == "price":
+                if type(serializer['price']) == int:
+                    hamburger.price = serializer['price']
+                    hamburger.save()
                 else:
                     return Response(status=status.HTTP_400_BAD_REQUEST)
-            elif elemento == "id":
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-            elif elemento == "ingredientes":
-                return Response(status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-        hamburguesa = self.get_object(pk)
-        serializer = HamburguesaSerializer(hamburguesa)
-        dict_hamburguesa = serializer.data
-        dict_hamburguesa["ingredientes"] = retornar_ingredientes(dict_hamburguesa['id'])
-        return Response(dict_hamburguesa, status=status.HTTP_200_OK)
+        hamburger = self.get_object(pk)
+        serializer = HamburgerSerializer(hamburger)
+        hamburger_dict = serializer.data
+        hamburger_dict["ingredient"] = return_ingredients(hamburger_dict['id'])
+        return Response(hamburger_dict, status=status.HTTP_200_OK)
 
-class Hamburguesa_IngredienteList(APIView):
+class Hamburger_IngredientList(APIView):
 
     def get(self, request, format=None):
-        hamburguesas = Hamburguesa_Ingrediente.objects.all()
-        serializer = Hamburguesa_IngredienteSerializer(hamburguesas, many=True)
+        hamburger = Hamburger_Ingredient.objects.all()
+        serializer = Hamburger_IngredientSerializer(hamburger, many=True)
         return Response(serializer.data)
 
 
-class Hamburguesa_IngredienteDetail(APIView):
+class Hamburger_IngredientDetail(APIView):
 
     def get_object(self, pk):
         try:
-            return Hamburguesa_Ingrediente.objects.get(pk=pk)
-        except Hamburguesa_Ingrediente.DoesNotExist:
+            return Hamburger_Ingredient.objects.get(pk=pk)
+        except Hamburger_Ingredient.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
@@ -139,9 +135,9 @@ class Hamburguesa_IngredienteDetail(APIView):
             pk = int(pk)
         except ValueError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        hamburguesa_ingrediente = self.get_object(pk)
-        serializer = Hamburguesa_IngredienteSerializer(hamburguesa_ingrediente)
-        dict_hamburguesa = serializer.data
+        hamburger_ingredient = self.get_object(pk)
+        serializer = Hamburger_IngredientSerializer(hamburger_ingredient)
+        hamburger_dict = serializer.data
         return Response(serializer.data)
 
     def put(self, request, p_1, p_2, format=None):
@@ -150,33 +146,33 @@ class Hamburguesa_IngredienteDetail(APIView):
             p_2 = int(p_2)
         except ValueError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        dict_hamburguesa = {"id_hamburguesa": p_1, "id_ingrediente": p_2}
-        serializer = Hamburguesa_IngredienteSerializer(data=dict_hamburguesa)
+        hamburger_dict = {"id_hamburger": p_1, "id_ingredient": p_2}
+        serializer = Hamburger_IngredientSerializer(data=hamburger_dict)
 
-        lista_hamburguesas_ingredientes = Hamburguesa_Ingrediente.objects.all()
-        serializer2 = Hamburguesa_IngredienteSerializer(lista_hamburguesas_ingredientes, many=True)
+        hamburger_ingredient_list = Hamburger_Ingredient.objects.all()
+        serializer2 = Hamburger_IngredientSerializer(hamburger_ingredient_list, many=True)
         lista = serializer2.data
 
-        lista_ingredientes =  Ingrediente.objects.all()
-        serializer3 = IngredienteSerializer(lista_ingredientes, many=True)
-        lista_ingredientes = serializer3.data
+        ingredient_list =  Ingredient.objects.all()
+        serializer3 = IngredientSerializer(ingrediente_list, many=True)
+        ingredient_list = serializer3.data
 
-        lista_hamburguesas_2 = Hamburguesa.objects.all()
-        serializer4 = HamburguesaSerializer(lista_hamburguesas_2, many=True)
-        lista_2 = serializer4.data
+        hamburguesas_list_2 = Hamburger.objects.all()
+        serializer4 = HamburgerSerializer(hamburguesas_list_2, many=True)
+        list_2 = serializer4.data
         if serializer.is_valid():
             i = 0
             j = 0
-            for ingrediente in lista_ingredientes:
-                if int(ingrediente['id']) == p_2:
+            for ingredient in ingredient_list:
+                if int(ingredient['id']) == p_2:
                     i+=1
-            for hamburguesa in lista_2:
-                if int(hamburguesa['id']) == p_1:
+            for hamburger in lista_2:
+                if int(hamburger['id']) == p_1:
                     j+=1
             if i == 0 or j == 0:
                 return Response(status=status.HTTP_404_NOT_FOUND)
-            for elemento in lista:
-                if elemento['id_hamburguesa'] == p_1 and elemento['id_ingrediente'] == p_2:
+            for element in list:
+                if element['id_hamburguer'] == p_1 and element['id_ingredient'] == p_2:
                     return Response(status=status.HTTP_200_OK) ##aca es
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
@@ -188,31 +184,31 @@ class Hamburguesa_IngredienteDetail(APIView):
             p_2 = int(p_2)
         except ValueError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        lista_hamburguesas_ingredientes = Hamburguesa_Ingrediente.objects.all()
-        serializer2 = Hamburguesa_IngredienteSerializer(lista_hamburguesas_ingredientes, many=True)
-        lista = serializer2.data
-        for elemento in lista:
-            if elemento['id_hamburguesa'] == p_1 and elemento['id_ingrediente'] == p_2:
-                pk = elemento['id']
-                hamburguesa_ingrediente = self.get_object(pk)
-                hamburguesa_ingrediente.delete()
+        hamburger_ingredient_list = Hamburger_Ingredient.objects.all()
+        serializer2 = Hamburger_IngredientSerializer(hamburger_ingredient_list, many=True)
+        list = serializer2.data
+        for element in list:
+            if element['id_hamburger'] == p_1 and element['id_ingredient'] == p_2:
+                pk = element['id']
+                hamburger_ingredient = self.get_object(pk)
+                hamburger_ingredient.delete()
                 return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-class Hamburguesa_IngredienteList(generics.ListCreateAPIView):
-    queryset = Hamburguesa_Ingrediente.objects.all()
-    serializer_class = Hamburguesa_IngredienteSerializer
+class Hamburger_IngredientList(generics.ListCreateAPIView):
+    queryset = Hamburger_Ingredient.objects.all()
+    serializer_class = Hamburger_IngredientSerializer
 
-class IngredienteList(generics.ListCreateAPIView):
-    queryset = Ingrediente.objects.all()
-    serializer_class = IngredienteSerializer
+class IngredientList(generics.ListCreateAPIView):
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
 
-class IngredienteDetail(APIView):
+class IngredientDetail(APIView):
 
     def get_object(self, pk):
         try:
-            return Ingrediente.objects.get(pk=pk)
+            return Ingredient.objects.get(pk=pk)
         except Ingrediente.DoesNotExist:
             raise Http404
 
@@ -221,8 +217,8 @@ class IngredienteDetail(APIView):
             pk = int(pk)
         except ValueError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        ingrediente = self.get_object(pk)
-        serializer = IngredienteSerializer(ingrediente)
+        ingredient = self.get_object(pk)
+        serializer = IngredientSerializer(ingrediente)
         return Response(serializer.data)
 
     def delete(self, request, pk, format=None):
@@ -230,27 +226,27 @@ class IngredienteDetail(APIView):
             pk = int(pk)
         except ValueError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        lista_hamburguesas_ingredientes = Hamburguesa_Ingrediente.objects.all()
-        serializer2 = Hamburguesa_IngredienteSerializer(lista_hamburguesas_ingredientes, many=True)
-        lista = serializer2.data
-        for elemento in lista:
-            if elemento['id_ingrediente'] == pk:
+        hamburger_ingredient_list = Hamburger_Ingredient.objects.all()
+        serializer2 = Hamburger_IngredientSerializer(hamburger_ingredient_list, many=True)
+        list = serializer2.data
+        for element in list:
+            if element['id_ingredient'] == pk:
                 return Response(status=status.HTTP_409_CONFLICT)
-        ingrediente = self.get_object(pk)
-        ingrediente.delete()
+        ingredient = self.get_object(pk)
+        ingredient.delete()
         return Response(status=status.HTTP_200_OK)
 
 
-def retornar_ingredientes(list_id):
-    lista = []
-    lista_final = []
-    hamburguesas_e_ingredientes = Hamburguesa_Ingrediente.objects.all()
-    serializer = Hamburguesa_IngredienteSerializer(hamburguesas_e_ingredientes, many=True)
-    for elemento in serializer.data:
-        if int(elemento['id_hamburguesa']) == int(list_id):
-            lista.append(int(elemento['id_ingrediente']))
-    lista.sort()
-    for numero in lista:
-        dict = {"path" : URL + "ingrediente/{}".format(numero)}
-        lista_final.append(dict)
-    return lista_final
+def return_ingredients(_id):
+    list = []
+    final_list = []
+    hamburger_ingredient = Hamburger_Ingredient.objects.all()
+    serializer = Hamburger_IngredientSerializer(hamburger_ingredient, many=True)
+    for element in serializer.data:
+        if int(element['id_hamburger']) == int(_id):
+            list.append(int(element['id_ingredient']))
+    list.sort()
+    for number in list:
+        dict = {"path" : URL + "ingredient/{}".format(number)}
+        final_list.append(dict)
+    return final_list

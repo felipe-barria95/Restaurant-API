@@ -1,18 +1,18 @@
 from rest_framework import serializers
 
-from .models import Hamburguesa, Hamburguesa_Ingrediente, Ingrediente
+from .models import Hamburger, Hamburger_Ingredient, Ingredient
 
-class HamburguesaSerializer(serializers.HyperlinkedModelSerializer):
+class HamburgerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Hamburguesa
-        fields = ('id', 'nombre', 'precio', 'descripcion', 'imagen')
+        model = Hamburger
+        fields = ('id', 'name', 'price', 'description', 'image')
 
-class Hamburguesa_IngredienteSerializer(serializers.HyperlinkedModelSerializer):
+class Hamburger_IngredientSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Hamburguesa_Ingrediente
-        fields = ('id', 'id_hamburguesa', 'id_ingrediente')
+        model = Hamburger_Ingredient
+        fields = ('id', 'id_hamburger', 'id_ingredient')
 
-class IngredienteSerializer(serializers.HyperlinkedModelSerializer):
+class IngredientSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Ingrediente
-        fields = ('id', 'nombre', 'descripcion')
+        model = Ingredient
+        fields = ('id', 'name', 'description')

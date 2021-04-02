@@ -1,0 +1,6 @@
+
+.DS_Store
+/venv
+api/__pycache__
+*.pyc
+*.pyc
